@@ -1,30 +1,32 @@
-package com.kitur.assessment.ViewModel
+package com.kitur.assessment.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kitur.assessment.Repository.PostRepository
+
 import com.kitur.assessment.model.Post
-
-class PostViewModel:ViewModel() {
-
+import kotlinx.coroutines.launch
 
 
-        private var productRepo = PostRepository()
-        val productLiveData = MutableLiveData<List<Post>>()
-        val errorLiveData = MutableLiveData<String>()
+class PostViewModel : ViewModel() {
+     var postRepo = PostRepository()
+    val postLiveData = MutableLiveData<List<Post>>()
+    val errorLiveData = MutableLiveData<String>()
 
-        fun fetchProducts(){
-            ViewModelScope.launch{
-                val response = productRepo.getPost()
-                if (response.isSuccessful){
-                    productLiveData.postValue(response.body()?.products)
-                }
-                else{
-                    errorLiveData.postValue(response.errorBody()?.string())
-                }
+    fun fetchProducts() {
+        viewModelScope.launch {
+            val response = postRepo.getPost()
+            if (response.isSuccessful) {
+                val postList=response.body()?: emptyList()
+                postLiveData.postValue(postList
+                        as List<Post>)
+
+            } else {
+                errorLiveData.postValue(response.errorBody()?.string())
             }
         }
-
-
     }
+
+
 }

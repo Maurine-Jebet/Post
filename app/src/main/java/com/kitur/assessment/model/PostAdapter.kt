@@ -1,40 +1,41 @@
-
-package com.example.assessment
+package com.kitur.assessment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.kitur.assessment.databinding.ActivityPostBinding
 import com.kitur.assessment.model.Post
-import com.squareup.picasso.Picasso
 
 
-
-class PostAdapter (var productList:List<Post>):RecyclerView.Adapter<PostAdapter.ProductViewHolder>(){
+class PostAdapter(var postList: List<Post>) :
+    RecyclerView.Adapter<ProductViewHolder>() {
+    lateinit var binding: ActivityPostBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        var binding=PostDisplayBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return  ProductViewHolder(binding)
+
+        var binding =
+            ActivityPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(binding)
+    }
+
+
+    override fun getItemCount(): Int {
+        return postList.size
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        var currentProduct = productList[position]
-        holder.bind(currentProduct)
-    }
-
-    override fun getItemCount(): Int {
-        return productList.size
-    }
-
-    inner class ProductViewHolder(private val binding: PostDisplayBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(currentProduct: Post){
-            binding.apply {
-                binding.tvId.text = currentProduct.id.toString()
-                binding.tvTitle.text = currentProduct.title.toString()
-                binding.tvDescription.text = currentProduct.description.toString()
+        val currentItem = postList[position]
+        val binding = holder.binding
+        binding.tvBody.text = currentItem.body
+        binding.tvId.text = currentItem.id.toString()
+        binding.tvTitle.text = currentItem.title
 
 
-                Picasso.get()
-
-            }
-        }
     }
 }
+
+class ProductViewHolder(var binding: ActivityPostBinding) :
+    RecyclerView.ViewHolder(binding.root)
+
+
+
+
